@@ -6,6 +6,11 @@ const ALLOWED_KEY = '1234567';
 // Set the port dynamically (from the environment variable or default to 8080 for local development)
 const PORT = process.env.PORT || 8080; 
 
+// Get the WebSocket URL based on the environment (local or Render)
+const SOCKET_URL = process.env.NODE_ENV === 'production'
+    ? 'wss://vishnusocket.onrender.com' // Production WebSocket URL
+    : `ws://localhost:${PORT}`; // Local WebSocket URL for development
+
 // Configure WebSocket server
 const wss = new WebSocket.Server({ port: PORT });
 
@@ -33,4 +38,4 @@ wss.on('connection', (ws, req) => {
     });
 });
 
-console.log(`WebSocket server is running on ws://localhost:${PORT} or wss://your-app-name.onrender.com`);
+console.log(`WebSocket server is running on ${SOCKET_URL}`);
