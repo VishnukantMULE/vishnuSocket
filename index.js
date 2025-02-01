@@ -1,10 +1,12 @@
-const WebSocket = require('ws');
-const connectDB = require('./db/database');
 const express = require('express');
 const http = require('http');
+const connectDB = require('./db/database');
+const initializeWebSocket = require('./socket/socket'); 
 
 const register = require('./routes/auth/register');
 const login = require('./routes/auth/login');
+const activeUser=require('./routes/chat/active_user');
+const deleteAllUsers=require('./routes/admin/deleteAll');
 
 const app = express();
 const server = http.createServer(app); 
@@ -15,24 +17,17 @@ connectDB();
 
 app.use('/auth', login);
 app.use('/auth', register);
+app.use('/chat',activeUser);
+
+
+app.use('/admin', deleteAllUsers);
 
 const PORT = process.env.PORT || 9000;
+
+initializeWebSocket(server);
+
 
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-const wss = new WebSocket.Server({ server });
-
-wss.on('connection', (ws, req) => {
-    console.log('New WebSocket connection established.');
-
-    ws.on('message', (message) => {
-        console.log(`Received message: ${message}`);
-        ws.send(`Server received: ${message}`);
-    });
-
-    ws.on('close', () => {
-        console.log('Client disconnected');
-    });
-});
