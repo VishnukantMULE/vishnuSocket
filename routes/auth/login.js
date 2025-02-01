@@ -14,10 +14,11 @@ router.post("/login", async (req, res) => {
 
     res.status(200).json({ 
       message: "Authentication successful", 
-      userId: user._id 
+      userId: user._id,
+      userName: user.userName 
     });
 
-    console.log(`User Login With ID: ${user._id}`);
+    console.log(`User Login With ID: ${user._id}, Username: ${user.userName}`);
   } catch (err) {
     console.log("Error during login: " + err);
     res.status(500).json({
