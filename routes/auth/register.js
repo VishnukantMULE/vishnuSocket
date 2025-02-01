@@ -20,11 +20,19 @@ router.post("/register", async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully", userId: newUser._id });
-    console.log(`New User Registered With ID: ${newUser._id}`);
+    res.status(201).json({ 
+      message: "User registered successfully", 
+      userId: newUser._id, 
+      userName: newUser.userName 
+    });
+
+    console.log(`New User Registered With ID: ${newUser._id}, Username: ${newUser.userName}`);
   } catch (err) {
     console.log("Error during registration: " + err);
-    res.status(500).json({ message: "Error during registration", reason: "Internal server error." });
+    res.status(500).json({ 
+      message: "Error during registration", 
+      reason: "Internal server error." 
+    });
   }
 });
 
