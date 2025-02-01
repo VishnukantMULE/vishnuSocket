@@ -28,8 +28,14 @@ function initializeWebSocket(server) {
 
         await updateUserStatus(user._id.toString(), true, socketId);
 
-        ws.send(JSON.stringify({ type: 'socket_assigned', socketId }));
+        // Sending initial response as JSON with 'type' and 'data' structure
+        const response = { 
+            type: 'socket_assigned', 
+            data: { socketId } 
+        };
+        ws.send(JSON.stringify(response));
 
+        // Broadcast active users
         broadcastActiveUsers(wss);
 
         ws.on('message', async (message) => {
@@ -66,7 +72,12 @@ function generateSocketId() {
 async function broadcastActiveUsers(wss) {
     try {
         const activeUsers = await getActiveUsers();
-        const activeUsersMessage = JSON.stringify({ type: 'active_users', users: activeUsers });
+        const message = {
+            type: 'active_users', 
+            data: { users: activeUsers }  // Wrapping data in 'data' key
+        };
+
+        const activeUsersMessage = JSON.stringify(message);
 
         wss.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
