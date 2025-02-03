@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const connectDB = require('./db/database');
 const initializeWebSocket = require('./socket/socket'); 
+// const initializeWebSocket = require('./socket/socketTest'); 
 
 const register = require('./routes/auth/register');
 const login = require('./routes/auth/login');
